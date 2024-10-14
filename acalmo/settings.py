@@ -81,8 +81,18 @@ WSGI_APPLICATION = "acalmo.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     "default": env.db(),
+# }
+
 DATABASES = {
-    "default": env.db(),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': env("DB_HOST"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'NAME': env("DB_NAME"),
+    }
 }
 
 
