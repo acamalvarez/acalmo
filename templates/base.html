@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--==================== UNICONS ====================-->
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+  <!--==================== SWIPER CSS ====================-->
+  <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+
+  <!--==================== CSS ====================-->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <title>Camilo Álvarez</title>
+</head>
+
+<body>
+
+  {% block header %}
+  {% endblock header %}
+
+  {% block content %}
+  {% endblock content %}
+
+  {% block footer %}
+  {% endblock footer %}
+
+  <!--==================== SCROLL TOP ====================-->
+  <a href="/" class="scrollup" id="scroll-up">
+    <i class="uil uil-arrow-up scrollup__icon"></i>
+  </a>
+
+  <!--==================== SWIPER JS ====================-->
+  <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+
+  <!--==================== MAIN JS ====================-->
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

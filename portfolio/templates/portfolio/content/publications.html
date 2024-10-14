@@ -1,0 +1,21 @@
+<section class="publications section" id="publications">
+  <h2 class="section__title">Publications</h2>
+  <span class="section__subtitle">Scientific work</span>
+
+  <div class="publications__container container grid">
+    {% for publication in publications %}
+      <div class="publications__content">
+        <div>
+          <h3 class="publications__title">
+            {{ publication.title }}
+          </h3>
+        </div>
+
+        <span class="button button--flex button--small button--link publications__button">
+          <a href="{{ publication.url }}">View More</a>
+          <i class="uil uil-arrow-right button__icon"></i>
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+</section>
