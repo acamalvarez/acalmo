@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["www.acalmo.me", "acalmo.me", "35.243.194.54"]
+ALLOWED_HOSTS = ["www.acalmo.me"]
 
 
 # Application definition
@@ -137,11 +137,16 @@ STORAGES = {
 
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 GS_PROJECT_ID = env("GS_PROJECT_ID")
+from google.oauth2 import service_account
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    env("GS_CREDENTIALS")
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = f"static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
