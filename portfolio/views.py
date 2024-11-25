@@ -29,13 +29,15 @@ class HomeView(FormView):
         return context
 
     def form_valid(self, form: Any) -> HttpResponse:
-        message = form.cleaned_data["message"]
         email = form.cleaned_data["email"]
-        message = f"From: {email}\n{message}"
+        message = form.cleaned_data["message"]
+        name = form.cleaned_data["name"]
+
+        email_message = f"From: {email}\n{name}\n{message}"
 
         send_mail(
             subject=form.cleaned_data["subject"],
-            message=message,
+            message=email_message,
             from_email="",
             recipient_list=[settings.EMAIL_HOST_USER],
         )
