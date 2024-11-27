@@ -6,6 +6,7 @@ __pycache__/
 tmp/
 
 venv/
+media/
 
 .vscode/* 
 !.vscode/settings.json 
