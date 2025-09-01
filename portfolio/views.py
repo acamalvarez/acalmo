@@ -7,7 +7,10 @@ from django.http.response import HttpResponse as HttpResponse
 from django.views.generic.edit import FormView
 
 from .forms import ContactForm
-from .models import Project, Publication, Qualification, Skill
+from .models.project_models import Project
+from .models.publication_models import Publication
+from .models.qualification_models import Qualification
+from .models.skill_models import Skill
 
 
 class HomeView(FormView):
