@@ -87,7 +87,7 @@ WSGI_APPLICATION = "acalmo.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'HOST': env("DB_HOST"),
         'USER': env("DB_USER"),
         'PASSWORD': env("DB_PASSWORD"),
@@ -137,11 +137,11 @@ STORAGES = {
 
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 GS_PROJECT_ID = env("GS_PROJECT_ID")
-from google.oauth2 import service_account
+# from google.oauth2 import service_account
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    env("GS_CREDENTIALS")
-)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     env("GS_CREDENTIALS")
+# )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

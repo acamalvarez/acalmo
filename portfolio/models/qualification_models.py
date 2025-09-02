@@ -4,7 +4,7 @@ from django.utils.functional import cached_property
 
 
 class Qualification(models.Model):
-    EDUCATION = "education"
+    EDUCATION = "edu"
     WORK = "work"
     TYPE_CHOICES = {
         EDUCATION: "Education",
