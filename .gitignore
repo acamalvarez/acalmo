@@ -1,16 +1,45 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
 
-.env
-
-tmp/
-
-venv/
+# Django
+*.log
+local_settings.py
+db.sqlite3
 media/
+staticfiles/
 
+# IDE
 .vscode/* 
 !.vscode/settings.json 
 !.vscode/tasks.json 
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+.env.*
+
+# uv
+.cache/uv/
+.uv/
+uv.lock.local_settings
+
+# Temporary files
+*.tmp/
+*.bak
+*.swp
+*~
