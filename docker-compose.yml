@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  web:
+    build: .
+    container_name: acalmo-docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DEBUG: ${DEBUG}
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      STORAGE_DEFAULT_BACKEND: ${STORAGE_DEFAULT_BACKEND}
+      STORAGE_STATIC_BACKEND: ${STORAGE_STATIC_BACKEND}
+      GS_BUCKET_NAME: ${GS_BUCKET_NAME}
+      GS_PROJECT_ID: ${GS_PROJECT_ID}
+      EMAIL_BACKEND: ${EMAIL_BACKEND}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
