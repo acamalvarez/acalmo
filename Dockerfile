@@ -14,6 +14,7 @@ ENV UV_COMPILE_BYTECODE=1
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
 
 # Copy from the cache instead of linking since it's a mounted volume
 ENV UV_LINK_MODE=copy
@@ -43,4 +44,4 @@ ENTRYPOINT []
 USER nonroot
 
 # Run the django application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "acalmo.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "3", "acalmo.wsgi:application"]
