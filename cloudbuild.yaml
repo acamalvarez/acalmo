@@ -17,6 +17,29 @@ steps:
       - 'push'
       - '--all-tags'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}'
+  
+  # Run Django Migrations
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Migrate'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'jobs'
+      - 'execute'
+      - '${_SERVICE_NAME}-migrate' # A name for the job
+      - '--region'
+      - '${_REGION}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}:${SHORT_SHA}'
+      - '--command'
+      - 'python'
+      - '--args'
+      - 'manage.py,migrate,--noinput'
+      - '--wait' # Wait for the job to complete
+      # Pass secrets to the migration job
+      - '--set-secrets=DB_NAME=db-name:latest,DB_USER=db-user:latest,DB_PASSWORD=db-password:latest,DB_HOST=db-host:latest,DB_PORT=db-port:latest,SECRET_KEY=secret-key:latest'
+      # Pass the project ID so the app can fetch other secrets
+      - '--update-env-vars=GCP_PROJECT_ID=${_GCP_PROJECT_ID},SECRETS_TO_FETCH=DB_NAME,DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,SECRET_KEY'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
