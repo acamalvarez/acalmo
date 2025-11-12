@@ -134,14 +134,14 @@ USE_TZ = True
 
 STORAGES = {
     "default": {
-        "BACKEND": env("STORAGE_DEFAULT_BACKEND"),
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": env("STORAGE_STATIC_BACKEND"),
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
-GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_BUCKET_NAME = django.core.files.storage.FileSystemStorage",
 GS_PROJECT_ID = env("GS_PROJECT_ID")
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
