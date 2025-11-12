@@ -18,15 +18,6 @@ steps:
       - '--all-tags'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}'
 
-  # Migrate
-  - name: 'python:3.13'
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - |
-      pip install uv
-      uv run python manage.py migrate
-
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
@@ -59,6 +50,15 @@ steps:
       - '5'
       - '--min-instances'
       - '0'
+
+  # Migrate
+  - name: 'python:3.13'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      pip install uv
+      uv run python manage.py migrate
 
 substitutions:
   _REGION: us-central1
