@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import json
 
 import environ
 from google.oauth2 import service_account
@@ -144,7 +145,7 @@ GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 GS_PROJECT_ID = env("GS_PROJECT_ID")
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
-    env("GS_CREDENTIALS")
+    json.loads(env("GS_CREDENTIALS"))
 )
 
 # Static files (CSS, JavaScript, Images)
