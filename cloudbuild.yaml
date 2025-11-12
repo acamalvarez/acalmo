@@ -41,7 +41,7 @@ steps:
       - 'DATABASE_URL=db-url:latest,DJANGO_SECRET_KEY=secret-key:latest'
       # Pass the project ID so the app can fetch other secrets
       - '--update-env-vars'
-      - 'GCP_PROJECT_ID=${_GCP_PROJECT_ID},SECRETS_TO_FETCH=db-url,secret-key'
+      - 'GCP_PROJECT_ID=${_GCP_PROJECT_ID}'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
