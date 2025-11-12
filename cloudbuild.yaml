@@ -18,20 +18,13 @@ steps:
       - '--all-tags'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}'
 
-  # 3. Migrate
-  - name: gcr.io/google-appengine/exec-wrapper
+  # Migrate
+  - name: 'python:3.13'
+    entrypoint: 'bash'
     args:
-      - '-i'
-      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      - '-s'
-      - '${PROJECT_ID}:${_DEPLOY_REGION}:${_DB_INSTANCE}'
-      - '-e'
-      - 'SETTINGS_NAME=${_SECRET_SETTINGS_NAME}'
-      - '--'
-      - 'python'
-      - 'manage.py'
-      - 'migrate'
-    id: Migrate
+    - '-c'
+    - |
+      python manage.py migrate
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
