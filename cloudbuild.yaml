@@ -24,7 +24,7 @@ steps:
     args:
     - '-c'
     - |
-      python manage.py migrate
+      uv run python manage.py migrate
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
