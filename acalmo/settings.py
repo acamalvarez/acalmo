@@ -132,10 +132,10 @@ USE_TZ = True
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": env("STORAGE_DEFAULT_BACKEND"),
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": env("STORAGE_STATIC_BACKEND"),
     },
 }
 
