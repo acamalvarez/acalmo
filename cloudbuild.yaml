@@ -67,3 +67,6 @@ substitutions:
   _REPOSITORY: 'acalmo-repo'
   _IMAGE: 'acalmo-image'
   _SERVICE_ACCOUNT: 'acalmo-web-sa@${PROJECT_ID}.iam.gserviceaccount.com'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
