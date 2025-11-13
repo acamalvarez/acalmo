@@ -1,33 +1,110 @@
-venv
-.venv
-pip-log.txt
-pip-delete-this-directory.txt
-.tox
+# Git and version control
+.git/
+.gitignore
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Docker files (not needed inside container)
+Dockerfile
+.dockerignore
+compose.yaml
+docker-compose.yml
+docker-compose.yaml
+
+# Cloud build and CI/CD
+cloudbuild.yaml
+.github/
+.gitlab-ci.yml
+
+# Database files (should be external in production)
+db.sqlite3
+*.db
+
+# Log files
+*.log
+logs/
+
+# Test coverage
+htmlcov/
+.tox/
 .coverage
 .coverage.*
 .cache
 nosetests.xml
 coverage.xml
 *.cover
-*.log
-.git
-.mypy_cache
-.pytest_cache
-.hypothesis
+.hypothesis/
+.pytest_cache/
 
-# Django
-*.egg-info
-/dist
-/build
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# IDE
-.vscode
-.idea
+# pyenv
+.python-version
 
-# OS
-.DS_Store
-Thumbs.db
+# Environments
+.env.local
+.env.development
+.env.test
+.env.production
 
+# Node.js (if any frontend assets)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Environment files
-.env
+# Temporary files
+*.tmp
+*.temp
