@@ -62,10 +62,10 @@ steps:
 images:
 - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
 substitutions:
-  _SERVICE_NAME: 'acalmo-service'
+  _SERVICE_NAME: 'acalmo-web-service'
   _SERVICE_REGION: 'us-central1'
-  _REPOSITORY: 'acalmo-repo'
-  _IMAGE: 'acalmo-image'
+  _REPOSITORY: 'acalmo-web'
+  _IMAGE: 'acalmo-web'
   _SERVICE_ACCOUNT: 'acalmo-web-sa@${PROJECT_ID}.iam.gserviceaccount.com'
 
 options:
