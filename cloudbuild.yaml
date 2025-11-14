@@ -21,6 +21,8 @@ steps:
     - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
     - '--region'
     - '${_SERVICE_REGION}'
+    - '--service-account'
+    - '${_SERVICE_ACCOUNT}'
     - '--set-secrets'
     - 'SECRET_KEY=secret-key:latest'
     - '--set-secrets'
