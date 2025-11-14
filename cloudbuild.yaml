@@ -4,35 +4,39 @@ steps:
   args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA', '.']
   env:
   - 'DOCKER_BUILDKIT=1'
+
 # Push the image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA']
-# RUN MIGRATIONS BEFORE DEPLOYMENT
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: gcloud
-#   args:
-#     - 'run'
-#     - 'jobs'
-#     - 'execute'
-#     - 'acalmo-migrations'
-#     - '--image'
-#     - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
-#     - '--region'
-#     - '${_SERVICE_REGION}'
-#     - '--set-secrets'
-#     - 'SECRET_KEY=secret-key:latest'
-#     - '--set-secrets'
-#     - 'DB_NAME=db-name:latest'
-#     - '--set-secrets'
-#     - 'DB_USER=db-user:latest'
-#     - '--set-secrets'
-#     - 'DB_PASSWORD=db-password:latest'
-#     - '--set-secrets'
-#     - 'DB_HOST=db-host:latest'
-#     - '--set-secrets'
-#     - 'DB_PORT=db-port:latest'
-#     - '--task-override'
-#     - 'command=python,manage.py,migrate'
+
+# Run migrations
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'jobs'
+    - 'create'
+    - 'acalmo-migrations'
+    - '--image'
+    - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
+    - '--region'
+    - '${_SERVICE_REGION}'
+    - '--set-secrets'
+    - 'SECRET_KEY=secret-key:latest'
+    - '--set-secrets'
+    - 'DB_NAME=db-name:latest'
+    - '--set-secrets'
+    - 'DB_USER=db-user:latest'
+    - '--set-secrets'
+    - 'DB_PASSWORD=db-password:latest'
+    - '--set-secrets'
+    - 'DB_HOST=db-host:latest'
+    - '--set-secrets'
+    - 'DB_PORT=db-port:latest'
+    - '--task-override'
+    - 'command=python,manage.py,migrate'
+    - '--execute-now'
+
 # Deploy image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
