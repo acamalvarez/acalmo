@@ -33,8 +33,10 @@ steps:
     - 'DB_HOST=db-host:latest'
     - '--set-secrets'
     - 'DB_PORT=db-port:latest'
-    - '--task-override'
-    - 'command=python,manage.py,migrate'
+    - '--command'
+    - 'python'
+    - '--args'
+    - 'manage.py,migrate'
     - '--execute-now'
 
 # Deploy image to Cloud Run
