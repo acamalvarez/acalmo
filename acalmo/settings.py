@@ -61,10 +61,11 @@ ROOT_URLCONF = "acalmo.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["./templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -114,11 +115,26 @@ USE_I18N = True
 
 USE_TZ = True
 
+STORAGES = {
+    "default": {
+        "BACKEND": env("STORAGE_DEFAULT_BACKEND"),
+    },
+    "staticfiles": {
+        "BACKEND": env("STORAGE_STATIC_BACKEND"),
+    },
+}
+
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_PROJECT_ID = env("GS_PROJECT_ID")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

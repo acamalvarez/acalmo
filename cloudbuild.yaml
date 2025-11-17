@@ -9,14 +9,14 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA']
 
-# Run migrations
+# Collect Static
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
     - 'run'
     - 'jobs'
     - 'create'
-    - 'acalmo-migrations'
+    - 'acalmo-collectstatic'
     - '--image'
     - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
     - '--region'
@@ -29,10 +29,18 @@ steps:
     - 'ALLOWED_HOSTS=allowed-hosts:latest'
     - '--set-secrets'
     - 'DATABASE_URL=database-url:latest'
+    - '--set-secrets'
+    - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
+    - '--set-secrets'
+    - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
+    - '--set-secrets'
+    - 'GS_BUCKET_NAME=gs-bucket-name:latest'
+    - '--set-secrets'
+    - 'GS_PROJECT_ID=gs-project-id:latest'
     - '--command'
     - 'python'
     - '--args'
-    - 'manage.py,migrate'
+    - 'manage.py,collectstatic,--noinput'
     - '--execute-now'
 
 # Deploy image to Cloud Run
@@ -52,6 +60,14 @@ steps:
     - 'ALLOWED_HOSTS=allowed-hosts:latest'
     - '--set-secrets'
     - 'DATABASE_URL=database-url:latest'
+    - '--set-secrets'
+    - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
+    - '--set-secrets'
+    - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
+    - '--set-secrets'
+    - 'GS_BUCKET_NAME=gs-bucket-name:latest'
+    - '--set-secrets'
+    - 'GS_PROJECT_ID=gs-project-id:latest'
     - '--service-account'
     - '${_SERVICE_ACCOUNT}'
 
