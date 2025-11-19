@@ -126,6 +126,7 @@ STORAGES = {
 
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 GS_PROJECT_ID = env("GS_PROJECT_ID")
+GS_QUERYSTRING_AUTH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
