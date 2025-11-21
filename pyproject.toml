@@ -1,5 +1,5 @@
 [project]
-name = "test-acalmo"
+name = "acalmo"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,7 +9,7 @@ dependencies = [
     "django-environ>=0.12.0",
     "django-storages[google]>=1.14.6",
     "gunicorn>=23.0.0",
-    "pillow==12.0.0",
+    "pillow>=12.0.0",
     "psycopg>=3.2.12",
     "psycopg-binary>=3.2.12",
 ]
