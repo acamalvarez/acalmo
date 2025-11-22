@@ -55,6 +55,8 @@ steps:
     - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
     - '--set-secrets'
     - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
     - '--command'
     - 'python'
     - '--args'
@@ -104,6 +106,8 @@ steps:
     - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
     - '--set-secrets'
     - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
     - '--service-account'
     - '${_SERVICE_ACCOUNT}'
 
