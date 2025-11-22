@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables
 env = environ.Env(
     DEBUG=(bool, False),
-    SECURE_SSL_REDIRECT=(bool, False),
+    # SECURE_SSL_REDIRECT=(bool, False),
     SESSION_COOKIE_SECURE=(bool, False),
     CSRF_COOKIE_SECURE=(bool, False),
 )
@@ -154,6 +154,6 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_PORT = env("EMAIL_PORT", default="")
 EMAIL_USE_TLS = True
 
-SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
+# SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
 SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE")
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
