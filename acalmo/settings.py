@@ -36,7 +36,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-CSRF_TRUSTED_ORIGINS = env.list("ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = ["https://acalmo-web-service-187853465113.us-central1.run.app"]
 
 # Application definition
 
