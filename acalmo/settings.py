@@ -122,24 +122,30 @@ USE_TZ = True
 
 STORAGES = {
     "default": {
-        "BACKEND": env("STORAGE_DEFAULT_BACKEND"),
+        "BACKEND": env(
+            "STORAGE_DEFAULT_BACKEND",
+            default="django.core.files.storage.FileSystemStorage",
+        ),
     },
     "staticfiles": {
-        "BACKEND": env("STORAGE_STATIC_BACKEND"),
+        "BACKEND": env(
+            "STORAGE_STATIC_BACKEND",
+            default="django.contrib.staticfiles.storage.StaticFilesStorage",
+        ),
     },
 }
 
-GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-GS_PROJECT_ID = env("GS_PROJECT_ID")
+GS_BUCKET_NAME = env("GS_BUCKET_NAME", default="")
+GS_PROJECT_ID = env("GS_PROJECT_ID", default="")
 GS_QUERYSTRING_AUTH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles",
+    BASE_DIR / "static",
 ]
 
 
@@ -148,13 +154,15 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
 EMAIL_HOST = env("EMAIL_HOST", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
-EMAIL_PORT = env("EMAIL_PORT", default="")
+EMAIL_PORT = env("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = True
 
 # SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
-SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE")
-CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
+SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=False)
+CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=False)
