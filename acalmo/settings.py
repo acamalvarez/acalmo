@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
 
     "portfolio",
 ]
@@ -162,6 +164,8 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_PORT = env("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = True
+
+SITE_ID = 1
 
 # SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
 SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=False)
