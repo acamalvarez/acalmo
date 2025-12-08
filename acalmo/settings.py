@@ -49,14 +49,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
-
     "portfolio",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -90,6 +91,15 @@ WSGI_APPLICATION = "acalmo.wsgi.application"
 DATABASES = {
     "default": env.db(),
 }
+
+# Caching
+CACHES = {
+    "default": {
+        "BACKEND": env("CACHE_BACKEND", default="django.core.cache.backends.dummy.DummyCache"),
+        "LOCATION": env("CACHE_LOCATION", default=""),
+    }
+}
+CACHE_MIDDLEWARE_SECONDS= 60 * 60 * 24 * 7
 
 
 # Password validation
