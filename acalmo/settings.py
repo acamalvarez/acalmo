@@ -95,11 +95,13 @@ DATABASES = {
 # Caching
 CACHES = {
     "default": {
-        "BACKEND": env("CACHE_BACKEND", default="django.core.cache.backends.dummy.DummyCache"),
+        "BACKEND": env(
+            "CACHE_BACKEND", default="django.core.cache.backends.dummy.DummyCache"
+        ),
         "LOCATION": env("CACHE_LOCATION", default=""),
     }
 }
-CACHE_MIDDLEWARE_SECONDS= 60 * 60 * 24 * 7
+CACHE_MIDDLEWARE_SECONDS = 60 * 60 * 24 * 7
 
 
 # Password validation
