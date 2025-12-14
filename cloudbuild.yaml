@@ -222,6 +222,10 @@ steps:
     - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
     - '--set-secrets'
     - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
+    - '--set-secrets'
+    - 'CACHE_BACKEND=cache-backend:latest'
+    - '--set-secrets'
+    - 'CACHE_LOCATION=cache-location:latest'
     - '--service-account'
     - '${_SERVICE_ACCOUNT}'
 
