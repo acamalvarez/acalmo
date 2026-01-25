@@ -2,7 +2,7 @@
   <h2 class="section__title">Portfolio</h2>
   <div class="span section__subtitle">Some of my projects</div>
 
-  <div class="portfolio__container container swiper-container">
+  <div class="swiper portfolio__container container">
     <div class="swiper-wrapper">
       {% for project in projects %}
         <div class="portfolio__content grid swiper-slide">
@@ -10,11 +10,11 @@
 
           <div class="portfolio__data">
             <h3 class="portfolio__title">{{ project.title }}</h3>
-            
+
             <p class="portfolio__description">
               {{ project.description }}
             </p>
-            
+
             <a href="{{ project.url }}" class="button button--flex button--small portfolio__button">
               See project
               <i class="uil uil-arrow-right button__icon"></i>
@@ -29,7 +29,7 @@
     <div class="swiper-button-next">
       <i class="uil uil-angle-right-b swiper-portfolio-icon"></i>
     </div>
-    
+
     <div class="swiper-button-prev">
       <i class="uil uil-angle-left-b swiper-portfolio-icon"></i>
     </div>

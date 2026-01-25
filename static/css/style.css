@@ -40,7 +40,7 @@
   --font-medium: 500;
   --font-semi-bold: 600;
 
-  /*========== Margenes Bottom ==========*/
+  /*========== Margins Bottom ==========*/
   /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
   --mb-0-25: .25rem;
   --mb-0-5: .5rem;
@@ -51,7 +51,7 @@
   --mb-2-5: 2.5rem;
   --mb-3: 3rem;
 
-  /*========== z index ==========*/
+  /*========== z-index ==========*/
   --z-tooltip: 10;
   --z-fixed: 100;
 }
@@ -196,7 +196,7 @@ img {
 }
 
 .nav__logo:hover {
-  color: var(--first-color)
+  color: var(--first-color);
 }
 
 .nav__toggle {
@@ -482,6 +482,7 @@ img {
 }
 
 .skills__titles {
+  font-size: var(--h3-font-size);
   display: flex;
   justify-content: space-between;
   margin-bottom: var(--mb-0-5);
@@ -651,6 +652,10 @@ img {
   content: '';
 }
 
+.swiper-navigation-icon {
+  display: none;
+}
+
 .swiper-portfolio-icon {
   font-size: 2rem;
   color: var(--first-color);
@@ -664,7 +669,7 @@ img {
   right: -.5rem;
 }
 
-.swiper-container-horizontal>.swiper-pagination-bullets {
+.swiper-horizontal>.swiper-pagination-bullets {
   bottom: -2.5rem;
 }
 
@@ -715,7 +720,8 @@ img {
   color: var(--title-color);
 }
 
-.contact__content > input, textarea {
+.contact__content>input,
+textarea {
   width: 100%;
   background-color: var(--input-color);
   color: var(--text-color);
@@ -1084,7 +1090,7 @@ img {
     right: -3.5rem;
   }
 
-  .swiper-container-horizontal>.swiper-pagination-bullets {
+  .swiper-horizontal>.swiper-pagination-bullets {
     bottom: -4.5rem;
   }
 
