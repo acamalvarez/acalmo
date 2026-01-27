@@ -24,6 +24,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8080"]
 
 volumes:
   postgres_data:
