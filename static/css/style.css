@@ -622,6 +622,7 @@ img {
 /*==================== PROJECTS ====================*/
 .portfolio__container {
   overflow: initial;
+  padding: 0 2rem;
 }
 
 .portfolio__content {
@@ -662,11 +663,11 @@ img {
 }
 
 .swiper-button-prev {
-  left: -.5rem;
+  left: .5rem;
 }
 
 .swiper-button-next {
-  right: -.5rem;
+  right: .5rem;
 }
 
 .swiper-horizontal>.swiper-pagination-bullets {
@@ -1083,11 +1084,11 @@ textarea {
   }
 
   .swiper-button-prev {
-    left: -3.5rem;
+    left: .5rem;
   }
 
   .swiper-button-next {
-    right: -3.5rem;
+    right: .5rem;
   }
 
   .swiper-horizontal>.swiper-pagination-bullets {
