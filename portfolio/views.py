@@ -1,9 +1,9 @@
 from typing import Any
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.http.response import HttpResponse as HttpResponse
 from django.views.generic.edit import FormView
 
 from .forms import ContactForm
@@ -23,12 +23,8 @@ class HomeView(FormView):
         context["projects"] = Project.objects.filter(featured=True)
         context["publications"] = Publication.objects.filter(featured=True)
         context["skills"] = Skill.objects.all()
-        context["educations"] = Qualification.objects.filter(
-            qualification_type=Qualification.EDUCATION
-        )
-        context["works"] = Qualification.objects.filter(
-            qualification_type=Qualification.WORK
-        )
+        context["educations"] = Qualification.objects.filter(qualification_type=Qualification.EDUCATION)
+        context["works"] = Qualification.objects.filter(qualification_type=Qualification.WORK)
         return context
 
     def form_valid(self, form: Any) -> HttpResponse:
@@ -46,5 +42,7 @@ class HomeView(FormView):
         )
 
         form.save()
+
+        messages.add_message(self.request, messages.SUCCESS, "Message sent successfully!")
 
         return super().form_valid(form)

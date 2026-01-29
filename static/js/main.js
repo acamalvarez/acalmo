@@ -147,3 +147,14 @@ themeButton.addEventListener('click', () => {
     localStorage.setItem('selected-theme', getCurrentTheme())
     localStorage.setItem('selected-icon', getCurrentIcon())
 })
+
+/*==================== REMOVE MESSAGE ====================*/
+const messages = document.querySelectorAll('.message')
+
+if (messages.length > 0) {
+    setTimeout(() => {
+        messages.forEach(message => {
+            message.remove()
+        })
+    }, 3000)
+}

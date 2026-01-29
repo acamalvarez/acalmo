@@ -151,7 +151,7 @@ img {
 .section__subtitle {
   display: block;
   font-size: var(--small-font-size);
-  margin-bottom: var(--mb-3);
+  margin-bottom: var(--mb-1-5);
 }
 
 .section__title,
@@ -279,7 +279,7 @@ img {
 
 .home__content {
   grid-template-columns: .5fr 3fr;
-  padding-top: 3.5rem;
+  padding-top: 2rem;
   align-items: center;
 }
 
@@ -686,7 +686,7 @@ img {
 
 /*==================== CONTACT ME ====================*/
 .contact__container {
-  row-gap: 3rem;
+  row-gap: 2rem;
 }
 
 .contact__information {
@@ -735,16 +735,16 @@ textarea {
 
 /*==================== FOOTER ====================*/
 .footer {
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 .footer__container {
-  row-gap: 3.5rem;
+  row-gap: 1rem;
 }
 
 .footer__bg {
   background-color: var(--first-color-second);
-  padding: 2rem 0 3rem;
+  padding: 1rem 0 2rem;
 }
 
 .footer__title {
@@ -920,7 +920,7 @@ textarea {
   }
 
   .section__subtitle {
-    margin-bottom: 4rem;
+    margin-bottom: var(--mb-1-5);
   }
 
   .header {
@@ -959,11 +959,11 @@ textarea {
   }
 
   .home__container {
-    row-gap: 5rem;
+    row-gap: 2rem;
   }
 
   .home__content {
-    padding-top: 5.5rem;
+    padding-top: 2rem;
     column-gap: 2rem;
   }
 
@@ -1101,5 +1101,58 @@ textarea {
 
   .contact__inputs {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+#messages-container {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-fixed);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.message {
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-weight: var(--font-medium);
+  width: 90%;
+  text-align: center;
+  pointer-events: auto;
+  animation: fadeOut 0.5s ease-in-out forwards 4.5s;
+  transition: .3s;
+}
+
+.message-success {
+  background-color: hsla(var(--hue-color), 60%, 50%, 0.4);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  border: 1px solid hsla(var(--hue-color), 60%, 50%, 0.2);
+}
+
+.message-error {
+  background-color: rgba(248, 58, 58, 0.9);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(248, 58, 58, 0.2);
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
   }
 }
