@@ -28,33 +28,6 @@ steps:
   id: 'push-image'
   waitFor: ['build-image']
 
-# --- Common Secrets Definition (YAML Anchor) ---
-# This is a dummy step used only to define the secrets once.
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'true'
-  id: 'define-secrets'
-  # The following dictionary will be reused via <<: *secrets_config
-  hidden: &secrets_config
-    --set-env-vars: 'DJANGO_SETTINGS_MODULE=acalmo.settings'
-    --set-secrets:
-      - 'SECRET_KEY=secret-key:latest'
-      - 'ALLOWED_HOSTS=allowed-hosts:latest'
-      - 'DATABASE_URL=database-url:latest'
-      - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
-      - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
-      - 'GS_BUCKET_NAME=gs-bucket-name:latest'
-      - 'GS_PROJECT_ID=gs-project-id:latest'
-      - 'EMAIL_BACKEND=email-backend:latest'
-      - 'EMAIL_HOST=email-host:latest'
-      - 'EMAIL_HOST_PASSWORD=email-host-password:latest'
-      - 'EMAIL_HOST_USER=email-host-user:latest'
-      - 'EMAIL_PORT=email-port:latest'
-      - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
-      - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
-      - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
-      - 'CACHE_BACKEND=cache-backend:latest'
-      - 'CACHE_LOCATION=cache-location:latest'
-
 # 4. Collect Static (Runs in parallel with Migrations)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'bash'
@@ -65,11 +38,9 @@ steps:
         --image $_AR_IMAGE:$COMMIT_SHA \
         --region ${_SERVICE_REGION} \
         --service-account ${_SERVICE_ACCOUNT} \
-        $(echo "$$SECRETS_ARGS") \
+        ${_COMMON_FLAGS} \
         --command python --args manage.py,collectstatic,--noinput && \
       gcloud run jobs execute acalmo-collectstatic --region ${_SERVICE_REGION} --wait
-  env:
-    - 'SECRETS_ARGS=--set-env-vars=DJANGO_SETTINGS_MODULE=acalmo.settings --set-secrets=SECRET_KEY=secret-key:latest,ALLOWED_HOSTS=allowed-hosts:latest,DATABASE_URL=database-url:latest,STORAGE_DEFAULT_BACKEND=storage-default-backend:latest,STORAGE_STATIC_BACKEND=storage-static-backend:latest,GS_BUCKET_NAME=gs-bucket-name:latest,GS_PROJECT_ID=gs-project-id:latest,EMAIL_BACKEND=email-backend:latest,EMAIL_HOST=email-host:latest,EMAIL_HOST_PASSWORD=email-host-password:latest,EMAIL_HOST_USER=email-host-user:latest,EMAIL_PORT=email-port:latest,SESSION_COOKIE_SECURE=session-cookie-secure:latest,CSRF_COOKIE_SECURE=csrf-cookie-secure:latest,CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest,CACHE_BACKEND=cache-backend:latest,CACHE_LOCATION=cache-location:latest'
   id: 'collect-static'
   waitFor: ['push-image']
 
@@ -83,11 +54,9 @@ steps:
         --image $_AR_IMAGE:$COMMIT_SHA \
         --region ${_SERVICE_REGION} \
         --service-account ${_SERVICE_ACCOUNT} \
-        $(echo "$$SECRETS_ARGS") \
+        ${_COMMON_FLAGS} \
         --command python --args manage.py,migrate && \
       gcloud run jobs execute acalmo-migrate --region ${_SERVICE_REGION} --wait
-  env:
-    - 'SECRETS_ARGS=--set-env-vars=DJANGO_SETTINGS_MODULE=acalmo.settings --set-secrets=SECRET_KEY=secret-key:latest,ALLOWED_HOSTS=allowed-hosts:latest,DATABASE_URL=database-url:latest,STORAGE_DEFAULT_BACKEND=storage-default-backend:latest,STORAGE_STATIC_BACKEND=storage-static-backend:latest,GS_BUCKET_NAME=gs-bucket-name:latest,GS_PROJECT_ID=gs-project-id:latest,EMAIL_BACKEND=email-backend:latest,EMAIL_HOST=email-host:latest,EMAIL_HOST_PASSWORD=email-host-password:latest,EMAIL_HOST_USER=email-host-user:latest,EMAIL_PORT=email-port:latest,SESSION_COOKIE_SECURE=session-cookie-secure:latest,CSRF_COOKIE_SECURE=csrf-cookie-secure:latest,CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest,CACHE_BACKEND=cache-backend:latest,CACHE_LOCATION=cache-location:latest'
   id: 'run-migrations'
   waitFor: ['push-image']
 
@@ -101,9 +70,7 @@ steps:
         --image $_AR_IMAGE:$COMMIT_SHA \
         --region ${_SERVICE_REGION} \
         --service-account ${_SERVICE_ACCOUNT} \
-        $(echo "$$SECRETS_ARGS")
-  env:
-    - 'SECRETS_ARGS=--set-env-vars=DJANGO_SETTINGS_MODULE=acalmo.settings --set-secrets=SECRET_KEY=secret-key:latest,ALLOWED_HOSTS=allowed-hosts:latest,DATABASE_URL=database-url:latest,STORAGE_DEFAULT_BACKEND=storage-default-backend:latest,STORAGE_STATIC_BACKEND=storage-static-backend:latest,GS_BUCKET_NAME=gs-bucket-name:latest,GS_PROJECT_ID=gs-project-id:latest,EMAIL_BACKEND=email-backend:latest,EMAIL_HOST=email-host:latest,EMAIL_HOST_PASSWORD=email-host-password:latest,EMAIL_HOST_USER=email-host-user:latest,EMAIL_PORT=email-port:latest,SESSION_COOKIE_SECURE=session-cookie-secure:latest,CSRF_COOKIE_SECURE=csrf-cookie-secure:latest,CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest,CACHE_BACKEND=cache-backend:latest,CACHE_LOCATION=cache-location:latest'
+        ${_COMMON_FLAGS}
   id: 'deploy'
   waitFor: ['collect-static', 'run-migrations']
 
@@ -118,6 +85,10 @@ substitutions:
   _REPOSITORY: 'acalmo-web'
   _IMAGE: 'acalmo-web'
   _SERVICE_ACCOUNT: 'acalmo-web-sa@${PROJECT_ID}.iam.gserviceaccount.com'
+  # Consolidating all flags (env-vars and secrets) into a single substitution
+  _COMMON_FLAGS: >-
+    --set-env-vars=DJANGO_SETTINGS_MODULE=acalmo.settings
+    --set-secrets=SECRET_KEY=secret-key:latest,ALLOWED_HOSTS=allowed-hosts:latest,DATABASE_URL=database-url:latest,STORAGE_DEFAULT_BACKEND=storage-default-backend:latest,STORAGE_STATIC_BACKEND=storage-static-backend:latest,GS_BUCKET_NAME=gs-bucket-name:latest,GS_PROJECT_ID=gs-project-id:latest,EMAIL_BACKEND=email-backend:latest,EMAIL_HOST=email-host:latest,EMAIL_HOST_PASSWORD=email-host-password:latest,EMAIL_HOST_USER=email-host-user:latest,EMAIL_PORT=email-port:latest,SESSION_COOKIE_SECURE=session-cookie-secure:latest,CSRF_COOKIE_SECURE=csrf-cookie-secure:latest,CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest,CACHE_BACKEND=cache-backend:latest,CACHE_LOCATION=cache-location:latest
 
 options:
   logging: CLOUD_LOGGING_ONLY
