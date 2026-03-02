@@ -1,0 +1,28 @@
+# Gemini CLI ignore file
+# Prevents unnecessary context usage by ignoring these paths
+
+.venv/
+__pycache__/
+*.py[cod]
+.git/
+.idea/
+.vscode/
+
+# Build and static artifacts
+staticfiles/
+media/
+dist/
+build/
+*.egg-info/
+
+# Logs and databases
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# Temporary files
+.tmp/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
