@@ -1,45 +1,42 @@
-# Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+# --- Build Stage ---
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS builder
 
-# Setup a non-root user
-RUN groupadd --system --gid 999 nonroot \
- && useradd --system --gid 999 --uid 999 --create-home nonroot
-
-# Install the project into `/app`
-WORKDIR /app
-
-# Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
-
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Copy from the cache instead of linking since it's a mounted volume
 ENV UV_LINK_MODE=copy
 
-# Ensure installed tools can be executed out of the box
-ENV UV_TOOL_BIN_DIR=/usr/local/bin
+WORKDIR /app
 
-# Install the project's dependencies using the lockfile and settings
+# Install dependencies into a virtual environment
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project --no-dev
+    uv sync --frozen --no-install-project --no-dev
 
-# Then, add the rest of the project source code and install it
-# Installing separately from its dependencies allows optimal layer caching
+# Copy the rest of the project and install it
 COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
+    uv sync --frozen --no-dev
 
-# Place executables in the environment at the front of the path
+
+# --- Runtime Stage ---
+FROM python:3.13-slim-bookworm
+
+WORKDIR /app
+
+# Set production environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Reset the entrypoint, don't invoke `uv`
-ENTRYPOINT []
+# Setup a non-root user
+RUN groupadd --system --gid 999 nonroot \
+ && useradd --system --gid 999 --uid 999 --shell /bin/bash --create-home nonroot
 
-# Use the non-root user to run our application
+# Copy only the necessary files from the builder
+COPY --from=builder --chown=nonroot:nonroot /app/.venv /app/.venv
+COPY --from=builder --chown=nonroot:nonroot /app /app
+
+# Use the non-root user
 USER nonroot
 
 # Run the django application
