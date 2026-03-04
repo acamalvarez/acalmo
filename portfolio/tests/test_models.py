@@ -219,6 +219,17 @@ class QualificationModelTest(TestCase):
     def test_years_with_end_date(self):
         self.assertEqual(self.edu.years, "2018 - 2020")
 
+    def test_years_same_start_and_end_year(self):
+        """Test the years property when start and end date are in the same year."""
+        same_year_edu = Qualification.objects.create(
+            qualification_type=Qualification.EDUCATION,
+            title="Short Course",
+            subtitle="Online",
+            start_date=date(2021, 1, 1),
+            end_date=date(2021, 6, 1),
+        )
+        self.assertEqual(same_year_edu.years, "2021 - 2021")
+
     def test_years_without_end_date_uses_now(self):
         """When end_date is None, years should use the current year."""
         now_year = timezone.now().year
