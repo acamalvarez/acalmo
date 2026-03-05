@@ -49,11 +49,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+
     "portfolio",
 ]
 
 MIDDLEWARE = [
-    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -61,7 +61,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",
 ]
 
 ROOT_URLCONF = "acalmo.urls"
@@ -91,15 +90,6 @@ WSGI_APPLICATION = "acalmo.wsgi.application"
 DATABASES = {
     "default": env.db(),
 }
-
-# Caching
-CACHES = {
-    "default": {
-        "BACKEND": env("CACHE_BACKEND", default="django.core.cache.backends.dummy.DummyCache"),
-        "LOCATION": env("CACHE_LOCATION", default=""),
-    }
-}
-CACHE_MIDDLEWARE_SECONDS = 60 * 60 * 24 * 7
 
 
 # Password validation
@@ -151,9 +141,6 @@ GS_BUCKET_NAME = env("GS_BUCKET_NAME", default="")
 GS_PROJECT_ID = env("GS_PROJECT_ID", default="")
 GS_QUERYSTRING_AUTH = False
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -162,6 +149,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

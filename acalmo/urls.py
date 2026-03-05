@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
@@ -7,7 +5,7 @@ from django.urls import include, path
 from portfolio.sitemaps import PortfolioSitemap
 
 sitemaps = {
-    "portfolio": PortfolioSitemap,
+    'portfolio': PortfolioSitemap,
 }
 
 urlpatterns = [
@@ -15,7 +13,3 @@ urlpatterns = [
     path("", include("portfolio.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

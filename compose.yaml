@@ -21,8 +21,7 @@ services:
     environment:
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
-      # Override DATABASE_URL to use the 'db' service name instead of localhost
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env
 

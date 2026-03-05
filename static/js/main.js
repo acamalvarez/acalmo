@@ -1,7 +1,7 @@
 /*==================== MENU SHOW Y HIDDEN ====================*/
 const navMenu = document.getElementById('nav-menu'),
-    navToggle = document.getElementById('nav-toggle'),
-    navClose = document.getElementById('nav-close')
+    navToggle = document.getElementById('nav-toggle')
+navClose = document.getElementById('nav-close')
 
 /*===== MENU SHOW =====*/
 /* Validate if constant exists */
@@ -36,7 +36,7 @@ const skillsContent = document.getElementsByClassName('skills__content'),
 function toggleSkills() {
     let itemClass = this.parentNode.className
 
-    for (let i = 0; i < skillsContent.length; i++) {
+    for (i = 0; i < skillsContent.length; i++) {
         skillsContent[i].className = 'skills__content skills__close'
     }
     if (itemClass === 'skills__content skills__close') {
@@ -91,7 +91,7 @@ function scrollActive() {
     sections.forEach(current => {
         const sectionHeight = current.offsetHeight
         const sectionTop = current.offsetTop - 50;
-        let sectionId = current.getAttribute('id')
+        sectionId = current.getAttribute('id')
 
         if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
             document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.add('active-link')
@@ -106,11 +106,7 @@ window.addEventListener('scroll', scrollActive)
 function scrollHeader() {
     const nav = document.getElementById('header')
     // When the scroll is greater than 200 viewport height, add the scroll-header class to the header tag
-    if (this.scrollY >= 80) {
-        nav.classList.add('scroll-header')
-    } else {
-        nav.classList.remove('scroll-header')
-    }
+    if (this.scrollY >= 80) nav.classList.add('scroll-header'); else nav.classList.remove('scroll-header')
 }
 window.addEventListener('scroll', scrollHeader)
 
@@ -155,14 +151,3 @@ themeButton.addEventListener('click', () => {
     localStorage.setItem('selected-theme', getCurrentTheme())
     localStorage.setItem('selected-icon', getCurrentIcon())
 })
-
-/*==================== REMOVE MESSAGE ====================*/
-const messages = document.querySelectorAll('.message')
-
-if (messages.length > 0) {
-    setTimeout(() => {
-        messages.forEach(message => {
-            message.remove()
-        })
-    }, 3000)
-}

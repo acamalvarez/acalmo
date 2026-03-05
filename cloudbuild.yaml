@@ -1,93 +1,174 @@
 steps:
-# 1. Pull the latest image to use as a cache source
+# Build the image
 - name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      docker pull ${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:latest || exit 0
-  id: 'pull-cache'
-
-# 2. Build the image with caching and dual tags (SHA and latest)
-- name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build', 
-    '-t', '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:$COMMIT_SHA', 
-    '-t', '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:latest',
-    '--cache-from', '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:latest',
-    '.'
-  ]
+  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA', '.']
   env:
   - 'DOCKER_BUILDKIT=1'
-  id: 'build-image'
-  waitFor: ['pull-cache']
 
-# 3. Push both tags to Artifact Registry
+# Push the image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '--all-tags', '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}']
-  id: 'push-image'
-  waitFor: ['build-image']
+  args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA']
 
-# 4. Collect Static (Runs in parallel with Migrations)
+# Collect Static
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'bash'
+  entrypoint: gcloud
   args:
-    - '-c'
-    - |
-      gcloud run jobs deploy acalmo-collectstatic \
-        --image ${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:$COMMIT_SHA \
-        --region ${_SERVICE_REGION} \
-        --service-account ${_SERVICE_ACCOUNT} \
-        ${_COMMON_FLAGS} \
-        --command python --args manage.py,collectstatic,--noinput && \
-      gcloud run jobs execute acalmo-collectstatic --region ${_SERVICE_REGION} --wait
-  id: 'collect-static'
-  waitFor: ['push-image']
+    - 'run'
+    - 'jobs'
+    - 'create'
+    - 'acalmo-collectstatic-$SHORT_SHA'
+    - '--image'
+    - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
+    - '--region'
+    - '${_SERVICE_REGION}'
+    - '--service-account'
+    - '${_SERVICE_ACCOUNT}'
+    - '--set-env-vars'
+    - 'DJANGO_SETTINGS_MODULE=acalmo.settings'
+    - '--set-secrets'
+    - 'SECRET_KEY=secret-key:latest'
+    - '--set-secrets'
+    - 'ALLOWED_HOSTS=allowed-hosts:latest'
+    - '--set-secrets'
+    - 'DATABASE_URL=database-url:latest'
+    - '--set-secrets'
+    - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
+    - '--set-secrets'
+    - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
+    - '--set-secrets'
+    - 'GS_BUCKET_NAME=gs-bucket-name:latest'
+    - '--set-secrets'
+    - 'GS_PROJECT_ID=gs-project-id:latest'
+    - '--set-secrets'
+    - 'EMAIL_BACKEND=email-backend:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST=email-host:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_PASSWORD=email-host-password:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_USER=email-host-user:latest'
+    - '--set-secrets'
+    - 'EMAIL_PORT=email-port:latest'
+    - '--set-secrets'
+    - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
+    - '--command'
+    - 'python'
+    - '--args'
+    - 'manage.py,collectstatic,--noinput'
+    - '--execute-now'
 
-# 5. Run Migrations (Runs in parallel with Collect Static)
+# Run Migrations
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'bash'
+  entrypoint: gcloud
   args:
-    - '-c'
-    - |
-      gcloud run jobs deploy acalmo-migrate \
-        --image ${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:$COMMIT_SHA \
-        --region ${_SERVICE_REGION} \
-        --service-account ${_SERVICE_ACCOUNT} \
-        ${_COMMON_FLAGS} \
-        --command python --args manage.py,migrate && \
-      gcloud run jobs execute acalmo-migrate --region ${_SERVICE_REGION} --wait
-  id: 'run-migrations'
-  waitFor: ['push-image']
+    - 'run'
+    - 'jobs'
+    - 'create'
+    - 'acalmo-migrate-$SHORT_SHA'
+    - '--image'
+    - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
+    - '--region'
+    - '${_SERVICE_REGION}'
+    - '--service-account'
+    - '${_SERVICE_ACCOUNT}'
+    - '--set-env-vars'
+    - 'DJANGO_SETTINGS_MODULE=acalmo.settings'
+    - '--set-secrets'
+    - 'SECRET_KEY=secret-key:latest'
+    - '--set-secrets'
+    - 'ALLOWED_HOSTS=allowed-hosts:latest'
+    - '--set-secrets'
+    - 'DATABASE_URL=database-url:latest'
+    - '--set-secrets'
+    - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
+    - '--set-secrets'
+    - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
+    - '--set-secrets'
+    - 'GS_BUCKET_NAME=gs-bucket-name:latest'
+    - '--set-secrets'
+    - 'GS_PROJECT_ID=gs-project-id:latest'
+    - '--set-secrets'
+    - 'EMAIL_BACKEND=email-backend:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST=email-host:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_PASSWORD=email-host-password:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_USER=email-host-user:latest'
+    - '--set-secrets'
+    - 'EMAIL_PORT=email-port:latest'
+    - '--set-secrets'
+    - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
+    - '--command'
+    - 'python'
+    - '--args'
+    - 'manage.py,migrate'
+    - '--execute-now'
 
-# 6. Deploy to Cloud Run
+# Deploy image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'bash'
+  entrypoint: gcloud
   args:
-    - '-c'
-    - |
-      gcloud run deploy ${_SERVICE_NAME} \
-        --image ${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:$COMMIT_SHA \
-        --region ${_SERVICE_REGION} \
-        --service-account ${_SERVICE_ACCOUNT} \
-        ${_COMMON_FLAGS}
-  id: 'deploy'
-  waitFor: ['collect-static', 'run-migrations']
+    - 'run'
+    - 'deploy'
+    - '${_SERVICE_NAME}'
+    - '--image'
+    - '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
+    - '--region'
+    - '${_SERVICE_REGION}'
+    - '--set-env-vars'
+    - 'DJANGO_SETTINGS_MODULE=acalmo.settings'
+    - '--set-secrets'
+    - 'SECRET_KEY=secret-key:latest'
+    - '--set-secrets'
+    - 'ALLOWED_HOSTS=allowed-hosts:latest'
+    - '--set-secrets'
+    - 'DATABASE_URL=database-url:latest'
+    - '--set-secrets'
+    - 'STORAGE_DEFAULT_BACKEND=storage-default-backend:latest'
+    - '--set-secrets'
+    - 'STORAGE_STATIC_BACKEND=storage-static-backend:latest'
+    - '--set-secrets'
+    - 'GS_BUCKET_NAME=gs-bucket-name:latest'
+    - '--set-secrets'
+    - 'GS_PROJECT_ID=gs-project-id:latest'
+    - '--set-secrets'
+    - 'EMAIL_BACKEND=email-backend:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST=email-host:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_PASSWORD=email-host-password:latest'
+    - '--set-secrets'
+    - 'EMAIL_HOST_USER=email-host-user:latest'
+    - '--set-secrets'
+    - 'EMAIL_PORT=email-port:latest'
+    # - '--set-secrets'
+    # - 'SECURE_SSL_REDIRECT=secure-ssl-redirect:latest'
+    - '--set-secrets'
+    - 'SESSION_COOKIE_SECURE=session-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_COOKIE_SECURE=csrf-cookie-secure:latest'
+    - '--set-secrets'
+    - 'CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest'
+    - '--service-account'
+    - '${_SERVICE_ACCOUNT}'
 
 images:
-- '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:$COMMIT_SHA'
-- '${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:latest'
-
+- '$LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}/${_SERVICE_NAME}:$COMMIT_SHA'
 substitutions:
   _SERVICE_NAME: 'acalmo-web-service'
   _SERVICE_REGION: 'us-central1'
   _REPOSITORY: 'acalmo-web'
   _IMAGE: 'acalmo-web'
   _SERVICE_ACCOUNT: 'acalmo-web-sa@${PROJECT_ID}.iam.gserviceaccount.com'
-  _COMMON_FLAGS: >-
-    --set-env-vars=DJANGO_SETTINGS_MODULE=acalmo.settings
-    --set-secrets=SECRET_KEY=secret-key:latest,ALLOWED_HOSTS=allowed-hosts:latest,DATABASE_URL=database-url:latest,STORAGE_DEFAULT_BACKEND=storage-default-backend:latest,STORAGE_STATIC_BACKEND=storage-static-backend:latest,GS_BUCKET_NAME=gs-bucket-name:latest,GS_PROJECT_ID=gs-project-id:latest,EMAIL_BACKEND=email-backend:latest,EMAIL_HOST=email-host:latest,EMAIL_HOST_PASSWORD=email-host-password:latest,EMAIL_HOST_USER=email-host-user:latest,EMAIL_PORT=email-port:latest,SESSION_COOKIE_SECURE=session-cookie-secure:latest,CSRF_COOKIE_SECURE=csrf-cookie-secure:latest,CSRF_TRUSTED_ORIGINS=csrf-trusted-origins:latest,CACHE_BACKEND=cache-backend:latest,CACHE_LOCATION=cache-location:latest
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  dynamic_substitutions: true
