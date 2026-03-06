@@ -22,7 +22,7 @@ class HomeView(FormView):
         context = super().get_context_data(**kwargs)
         context["projects"] = Project.objects.filter(featured=True)
         context["publications"] = Publication.objects.filter(featured=True)
-        context["skills"] = Skill.objects.all()
+        context["skills"] = Skill.objects.prefetch_related("subskill_set").all()
         context["educations"] = Qualification.objects.filter(qualification_type=Qualification.EDUCATION)
         context["works"] = Qualification.objects.filter(qualification_type=Qualification.WORK)
         return context
