@@ -174,6 +174,11 @@ EMAIL_USE_TLS = True
 
 SITE_ID = 1
 
+# Trust the X-Forwarded-Proto header from Cloud Run's load balancer.
+# Without this, SECURE_SSL_REDIRECT causes an infinite redirect loop
+# because Cloud Run terminates TLS and forwards requests as HTTP.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Security headers
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=False)
