@@ -3,8 +3,10 @@ from typing import Any
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
+from django_ratelimit.decorators import ratelimit
 
 from .forms import ContactForm
 from .models.project_models import Project
@@ -26,6 +28,10 @@ class HomeView(FormView):
         context["educations"] = Qualification.objects.filter(qualification_type=Qualification.EDUCATION)
         context["works"] = Qualification.objects.filter(qualification_type=Qualification.WORK)
         return context
+
+    @method_decorator(ratelimit(key="ip", rate="5/m", method="POST", block=True))
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        return super().post(request, *args, **kwargs)
 
     def form_valid(self, form: Any) -> HttpResponse:
         email = form.cleaned_data["email"]
