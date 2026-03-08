@@ -1,7 +1,7 @@
 """Tests for admin registrations and URL routing."""
 
 from django.contrib.admin.sites import site as admin_site
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.urls import resolve, reverse
 
 from portfolio.models.contact_models import Contact

@@ -10,9 +10,7 @@ class Qualification(models.Model):
         EDUCATION: "Education",
         WORK: "Work",
     }
-    qualification_type = models.CharField(
-        max_length=4, choices=TYPE_CHOICES, default=WORK
-    )
+    qualification_type = models.CharField(max_length=4, choices=TYPE_CHOICES, default=WORK)
     title = models.CharField()
     subtitle = models.CharField()
     start_date = models.DateField()
