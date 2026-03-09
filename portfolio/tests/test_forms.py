@@ -1,6 +1,8 @@
 """Comprehensive tests for the ContactForm."""
 
+from unittest.mock import patch
 from django.test import TestCase
+from django_recaptcha.client import RecaptchaResponse
 
 from portfolio.forms import ContactForm
 
@@ -8,24 +10,30 @@ from portfolio.forms import ContactForm
 class ContactFormValidTest(TestCase):
     """Tests that valid data passes form validation."""
 
-    def test_valid_data(self):
+    @patch("django_recaptcha.fields.client.submit")
+    def test_valid_data(self, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         form = ContactForm(
             data={
                 "name": "Jane Doe",
                 "email": "jane@example.com",
                 "subject": "Hello",
                 "message": "This is a test message.",
+                "g-recaptcha-response": "PASSED",
             }
         )
         self.assertTrue(form.is_valid())
 
-    def test_form_saves_to_db(self):
+    @patch("django_recaptcha.fields.client.submit")
+    def test_form_saves_to_db(self, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         form = ContactForm(
             data={
                 "name": "Jane Doe",
                 "email": "jane@example.com",
                 "subject": "Hello",
                 "message": "Test message.",
+                "g-recaptcha-response": "PASSED",
             }
         )
         self.assertTrue(form.is_valid())
@@ -103,7 +111,7 @@ class ContactFormInvalidTest(TestCase):
     def test_empty_form(self):
         form = ContactForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 4)  # all four fields required
+        self.assertEqual(len(form.errors), 5)  # all four fields + captcha required
 
     def test_name_exceeds_max_length(self):
         form = ContactForm(
@@ -135,7 +143,7 @@ class ContactFormFieldsTest(TestCase):
 
     def test_form_fields(self):
         form = ContactForm()
-        expected = {"name", "email", "subject", "message"}
+        expected = {"name", "email", "subject", "message", "captcha"}
         self.assertEqual(set(form.fields.keys()), expected)
 
     def test_created_at_not_in_fields(self):

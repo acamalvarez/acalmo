@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django_recaptcha.client import RecaptchaResponse
 
 from portfolio.models.contact_models import Contact
 from portfolio.models.project_models import Project
@@ -161,24 +162,31 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
             "email": "john@example.com",
             "subject": "Test Subject",
             "message": "Hello, this is a test.",
+            "g-recaptcha-response": "PASSED",
         }
 
+    @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_redirects(self, mock_send_mail):
+    def test_valid_post_redirects(self, mock_send_mail, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/")
 
+    @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_saves_contact(self, mock_send_mail):
+    def test_valid_post_saves_contact(self, mock_send_mail, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         self.client.post(self.url, data=self.valid_data)
         self.assertEqual(Contact.objects.count(), 1)
         contact = Contact.objects.first()
         self.assertEqual(contact.name, "John Doe")
         self.assertEqual(contact.email, "john@example.com")
 
+    @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_sends_email(self, mock_send_mail):
+    def test_valid_post_sends_email(self, mock_send_mail, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         self.client.post(self.url, data=self.valid_data)
         mock_send_mail.assert_called_once()
         call_kwargs = mock_send_mail.call_args
@@ -187,8 +195,10 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
         self.assertIn("John Doe", call_kwargs[1]["message"])
         self.assertIn("Hello, this is a test.", call_kwargs[1]["message"])
 
+    @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_sets_success_message(self, mock_send_mail):
+    def test_valid_post_sets_success_message(self, mock_send_mail, mocked_submit):
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
         response = self.client.post(self.url, data=self.valid_data, follow=True)
         msgs = list(response.context["messages"])
         self.assertEqual(len(msgs), 1)
