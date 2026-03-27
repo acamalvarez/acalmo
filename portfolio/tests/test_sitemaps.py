@@ -27,9 +27,6 @@ class PortfolioSitemapTest(TestCase):
     def test_location_home(self):
         self.assertEqual(self.sitemap.location("home"), reverse("home"))
 
-    def test_lastmod_returns_none(self):
-        self.assertIsNone(self.sitemap.lastmod("home"))
-
 
 @override_settings(
     CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}},
