@@ -194,6 +194,19 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), "Message sent successfully!")
 
+    @patch("portfolio.views.send_mail")
+    def test_valid_post_email_failure_propagates(self, mock_send_mail):
+        """Test that if send_mail raises an exception, the exception propagates."""
+        from smtplib import SMTPException
+
+        mock_send_mail.side_effect = SMTPException("SMTP server disconnected")
+
+        with self.assertRaises(SMTPException):
+            self.client.post(self.url, data=self.valid_data)
+
+        # Ensure contact wasn't saved because exception aborted the transaction/flow
+        self.assertEqual(Contact.objects.count(), 0)
+
 
 # ---------------------------------------------------------------------------
 # POST tests — invalid form
