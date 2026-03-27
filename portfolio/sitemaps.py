@@ -13,7 +13,3 @@ class PortfolioSitemap(Sitemap):
     def location(self, item):
         if item == "home":
             return reverse("home")
-
-    def lastmod(self, item):
-        # Return None for static content
-        return None
