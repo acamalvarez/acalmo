@@ -299,6 +299,15 @@ class SkillModelTest(TestCase):
         )
         self.assertEqual(s.time, "More than 1 year")
 
+    def test_time_negative_duration(self):
+        """A skill with a start_date in the future should clamp to 1 year."""
+        future_year = timezone.now().year + 5
+        s = Skill.objects.create(
+            name="FutureTech",
+            start_date=date(future_year, 1, 1),
+        )
+        self.assertEqual(s.time, "More than 1 year")
+
     def test_subskills_returns_related(self):
         names = sorted(s.name for s in self.skill.subskills)
         self.assertEqual(names, ["Django", "Flask"])
