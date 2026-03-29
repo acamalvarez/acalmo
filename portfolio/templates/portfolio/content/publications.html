@@ -11,10 +11,11 @@
           </h3>
         </div>
 
-        <span class="button button--flex button--small button--link publications__button">
-          <a href="{{ publication.url }}">View More</a>
-          <i class="uil uil-arrow-right button__icon"></i>
-        </span>
+        <a href="{{ publication.url }}" target="_blank" rel="noopener noreferrer"
+           class="button button--flex button--small button--link publications__button">
+          View More
+          <i class="uil uil-arrow-right button__icon" aria-hidden="true"></i>
+        </a>
       </div>
     {% endfor %}
   </div>
