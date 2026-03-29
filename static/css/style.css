@@ -118,9 +118,6 @@ html {
   border-radius: 0.25rem;
 }
 
-:focus:not(:focus-visible) {
-  outline: none;
-}
 
 .button:focus-visible {
   box-shadow: 0 0 0 3px var(--first-color-lighter);
