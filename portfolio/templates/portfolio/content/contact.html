@@ -37,21 +37,21 @@
       {% csrf_token %}
       <div class="contact__inputs grid">
         <div class="contact__content">
-          <label for="" class="contact__label">Name</label>
+          <label for="{{ form.name.id_for_label }}" class="contact__label">Name</label>
           {{ form.name }}
         </div>
         <div class="contact__content">
-          <label for="" class="contact__label">Email</label>
+          <label for="{{ form.email.id_for_label }}" class="contact__label">Email</label>
           {{ form.email }}
         </div>
       </div>
       <div class="contact__content">
-        <label for="" class="contact__label">Subject</label>
+        <label for="{{ form.subject.id_for_label }}" class="contact__label">Subject</label>
         {{ form.subject }}
       </div>
       <div class="contact__content">
-        <label for="" class="contact__label">Message</label>
-        {{ form.message}}
+        <label for="{{ form.message.id_for_label }}" class="contact__label">Message</label>
+        {{ form.message }}
       </div>
 
       <div>

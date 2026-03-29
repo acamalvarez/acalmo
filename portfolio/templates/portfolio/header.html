@@ -37,15 +37,17 @@
           </a>
         </li>
       </ul>
-      <i class="uil uil-times nav__close" id="nav-close"></i>
+      <i class="uil uil-times nav__close" id="nav-close" role="button" tabindex="0" aria-label="Close navigation menu"></i>
     </div>
     <div class="nav__btns">
 
-      <i class="uil uil-moon change-theme" id="theme-button"></i>
+      <button type="button" class="change-theme" id="theme-button" aria-label="Toggle dark mode">
+        <i class="uil uil-moon" aria-hidden="true"></i>
+      </button>
 
-      <div class="nav__toggle" id="nav-toggle">
-        <i class="uil uil-apps"></i>
-      </div>
+      <button type="button" class="nav__toggle" id="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-menu">
+        <i class="uil uil-apps" aria-hidden="true"></i>
+      </button>
     </div>
   </nav>
 </header>
