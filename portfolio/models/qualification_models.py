@@ -11,8 +11,8 @@ class Qualification(models.Model):
         WORK: "Work",
     }
     qualification_type = models.CharField(max_length=4, choices=TYPE_CHOICES, default=WORK)
-    title = models.CharField()
-    subtitle = models.CharField()
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
 

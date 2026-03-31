@@ -4,7 +4,7 @@ from django.utils.functional import cached_property
 
 
 class Skill(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
 
@@ -26,7 +26,7 @@ class Skill(models.Model):
 
 class SubSkill(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    name = models.CharField()
+    name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
         return self.name
