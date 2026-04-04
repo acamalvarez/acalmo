@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+    "django_recaptcha",
     "portfolio",
 ]
 
@@ -188,3 +189,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", defa
 SECURE_HSTS_PRELOAD = env.bool("SECURE_HSTS_PRELOAD", default=False)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool("SECURE_CONTENT_TYPE_NOSNIFF", default=True)
 X_FRAME_OPTIONS = env("X_FRAME_OPTIONS", default="DENY")
+
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_REQUIRED_SCORE = env.float("RECAPTCHA_REQUIRED_SCORE", default=0.50)
