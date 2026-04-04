@@ -40,14 +40,14 @@ class ContactFormRateLimitTest(TestCase):
             "email": "john@example.com",
             "subject": "Test Subject",
             "message": "Hello, this is a test.",
-            "g-recaptcha-response": "PASSED",
+            "captcha": "PASSED",
         }
 
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_rate_limit_allows_first_five_requests(self, mock_send_mail: object, mocked_submit: object) -> None:
         """The first 5 POST requests should succeed (302 redirect)."""
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         for _ in range(5):
             response = self.client.post(self.url, data=self.valid_data)
             self.assertEqual(response.status_code, 302, "Expected 302 redirect for allowed request")
@@ -56,7 +56,7 @@ class ContactFormRateLimitTest(TestCase):
     @patch("portfolio.views.send_mail")
     def test_rate_limit_blocks_sixth_request(self, mock_send_mail: object, mocked_submit: object) -> None:
         """The 6th POST within the same minute should be blocked."""
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         for _ in range(5):
             self.client.post(self.url, data=self.valid_data)
 
@@ -85,14 +85,14 @@ class RateLimitWithDummyCacheTest(TestCase):
             "email": "john@example.com",
             "subject": "Test Subject",
             "message": "Hello, this is a test.",
-            "g-recaptcha-response": "PASSED",
+            "captcha": "PASSED",
         }
 
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_no_rate_limit_with_dummy_cache(self, mock_send_mail: object, mocked_submit: object) -> None:
         """All 10 POST requests should succeed when using DummyCache."""
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         for i in range(10):
             response = self.client.post(self.url, data=self.valid_data)
             self.assertEqual(

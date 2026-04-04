@@ -12,28 +12,28 @@ class ContactFormValidTest(TestCase):
 
     @patch("django_recaptcha.fields.client.submit")
     def test_valid_data(self, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         form = ContactForm(
             data={
                 "name": "Jane Doe",
                 "email": "jane@example.com",
                 "subject": "Hello",
                 "message": "This is a test message.",
-                "g-recaptcha-response": "PASSED",
+                "captcha": "PASSED",
             }
         )
         self.assertTrue(form.is_valid())
 
     @patch("django_recaptcha.fields.client.submit")
     def test_form_saves_to_db(self, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         form = ContactForm(
             data={
                 "name": "Jane Doe",
                 "email": "jane@example.com",
                 "subject": "Hello",
                 "message": "Test message.",
-                "g-recaptcha-response": "PASSED",
+                "captcha": "PASSED",
             }
         )
         self.assertTrue(form.is_valid())

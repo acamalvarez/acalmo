@@ -162,13 +162,13 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
             "email": "john@example.com",
             "subject": "Test Subject",
             "message": "Hello, this is a test.",
-            "g-recaptcha-response": "PASSED",
+            "captcha": "PASSED",
         }
 
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_valid_post_redirects(self, mock_send_mail, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/")
@@ -176,7 +176,7 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_valid_post_saves_contact(self, mock_send_mail, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         self.client.post(self.url, data=self.valid_data)
         self.assertEqual(Contact.objects.count(), 1)
         contact = Contact.objects.first()
@@ -186,7 +186,7 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_valid_post_sends_email(self, mock_send_mail, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         self.client.post(self.url, data=self.valid_data)
         mock_send_mail.assert_called_once()
         call_kwargs = mock_send_mail.call_args
@@ -198,17 +198,19 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
     @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
     def test_valid_post_sets_success_message(self, mock_send_mail, mocked_submit):
-        mocked_submit.return_value = RecaptchaResponse(is_valid=True)
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         response = self.client.post(self.url, data=self.valid_data, follow=True)
         msgs = list(response.context["messages"])
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), "Message sent successfully!")
 
+    @patch("django_recaptcha.fields.client.submit")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_email_failure_propagates(self, mock_send_mail):
+    def test_valid_post_email_failure_propagates(self, mock_send_mail, mocked_submit):
         """Test that if send_mail raises an exception, the exception propagates."""
         from smtplib import SMTPException
 
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.9})
         mock_send_mail.side_effect = SMTPException("SMTP server disconnected")
 
         with self.assertRaises(SMTPException):
@@ -274,3 +276,38 @@ class HomeViewInvalidPOSTTest(SeedDataMixin, TestCase):
         self.assertIn("skills", response.context)
         self.assertIn("educations", response.context)
         self.assertIn("works", response.context)
+
+    @patch("django_recaptcha.fields.client.submit")
+    def test_recaptcha_failure_rejects_form(self, mocked_submit):
+        """A failed reCAPTCHA should reject the form and not save a Contact."""
+        mocked_submit.return_value = RecaptchaResponse(is_valid=False)
+        valid_data = {
+            "name": "Bot",
+            "email": "bot@example.com",
+            "subject": "Spam",
+            "message": "Buy now!",
+            "captcha": "FAILED",
+        }
+        with self.assertLogs("django_recaptcha.fields", level="WARNING"):
+            response = self.client.post(reverse("home"), data=valid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("captcha", response.context["form"].errors)
+        self.assertEqual(Contact.objects.count(), 0)
+
+    @patch("django_recaptcha.fields.client.submit")
+    def test_low_recaptcha_score_rejects_form(self, mocked_submit):
+        """A reCAPTCHA v3 score below the threshold should reject the form."""
+        mocked_submit.return_value = RecaptchaResponse(is_valid=True, extra_data={"score": 0.1})
+        valid_data = {
+            "name": "Bot",
+            "email": "bot@example.com",
+            "subject": "Spam",
+            "message": "Buy now!",
+            "captcha": "LOW_SCORE",
+        }
+        with self.assertLogs("django_recaptcha.fields", level="WARNING"):
+            response = self.client.post(reverse("home"), data=valid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("captcha", response.context["form"].errors)
+        self.assertEqual(Contact.objects.count(), 0)
+

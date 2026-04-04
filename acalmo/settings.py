@@ -191,6 +191,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool("SECURE_CONTENT_TYPE_NOSNIFF", default=Tr
 X_FRAME_OPTIONS = env("X_FRAME_OPTIONS", default="DENY")
 
 # django-recaptcha
-RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY", default="dummy")
-RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY", default="dummy")
-SILENCED_SYSTEM_CHECKS = ["captcha.recaptcha_test_key_error"]
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_REQUIRED_SCORE = env.float("RECAPTCHA_REQUIRED_SCORE", default=0.85)
+SILENCED_SYSTEM_CHECKS = ["django_recaptcha.recaptcha_test_key_error"] if DEBUG else []
