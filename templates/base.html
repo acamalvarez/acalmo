@@ -7,6 +7,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- SEO -->
+  <meta name="description" content="Andrés Álvarez — Python developer specializing in Django, FastAPI, and data science. Google Cloud certified. View projects, publications, and experience.">
+  <meta name="author" content="Andrés Álvarez">
+  <link rel="canonical" href="https://acalmo.me">
+
+  <!-- Open Graph (Social Media Previews) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Andrés Álvarez | Python Developer">
+  <meta property="og:description" content="Portfolio showcasing projects, skills, publications, and experience.">
+  <meta property="og:url" content="https://acalmo.me">
+  <meta property="og:image" content="{% static 'img/perfil.png' %}">
+
+  <!--==================== PRECONNECT ====================-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unicons.iconscout.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!--==================== GOOGLE FONTS ====================-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+
   <!--==================== UNICONS ====================-->
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
@@ -22,7 +43,40 @@
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-  <title>acalmo</title>
+  <title>Andrés Álvarez | Python Developer — acalmo</title>
+
+  <!--==================== JSON-LD STRUCTURED DATA ====================-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Andrés Álvarez",
+    "jobTitle": "Python Developer",
+    "url": "https://acalmo.me",
+    "sameAs": [
+      "https://www.linkedin.com/in/acamalvarez/",
+      "https://github.com/acamalvarez/",
+      "https://x.com/acamalvarez"
+    ],
+    "knowsAbout": ["Python", "Django", "FastAPI", "Data Science", "Google Cloud"],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Medellín",
+      "addressCountry": "CO"
+    }
+  }
+  </script>
+
+  <!--==================== NOSCRIPT FALLBACK ====================-->
+  <noscript>
+    <style>
+      .skills__list { height: auto !important; margin-bottom: 2.5rem; }
+      .qualification [data-content] { display: block !important; }
+      .nav__toggle, .nav__close, .change-theme, .home__scroll { display: none !important; }
+      .nav__menu { position: static !important; padding: 0 !important; box-shadow: none !important; }
+      .nav__list { display: flex !important; flex-wrap: wrap; }
+    </style>
+  </noscript>
 </head>
 
 <body>
@@ -50,7 +104,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
 
   <!--==================== MAIN JS ====================-->
-  <script src="{% static 'js/main.js' %}"></script>
+  <script defer src="{% static 'js/main.js' %}"></script>
 </body>
 
 </html>

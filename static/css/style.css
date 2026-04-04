@@ -1,5 +1,5 @@
 /*==================== GOOGLE FONTS ====================*/
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+/* Loaded via <link> in base.html for parallel download */
 
 /*==================== VARIABLES CSS ====================*/
 :root {
@@ -21,20 +21,22 @@
   --input-color: hsl(var(--hue-color), 70%, 96%);
   --body-color: hsl(var(--hue-color), 60%, 99%);
   --container-color: #fff;
+  --contrast-text: #fff;
   --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
   --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
 
   /*========== Font and typography ==========*/
   --body-font: 'Poppins', sans-serif;
 
-  /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
-  --big-font-size: 2rem;
-  --h1-font-size: 1.5rem;
-  --h2-font-size: 1.25rem;
-  --h3-font-size: 1.125rem;
-  --normal-font-size: .938rem;
-  --small-font-size: .813rem;
-  --smaller-font-size: .75rem;
+  /* Fluid typography using clamp() — smooth scaling, no breakpoint jumps */
+  --big-font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --h1-font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --h2-font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --h3-font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  --h4-font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --normal-font-size: clamp(0.938rem, 0.9rem + 0.2vw, 1rem);
+  --small-font-size: clamp(0.813rem, 0.79rem + 0.12vw, 0.875rem);
+  --smaller-font-size: clamp(0.75rem, 0.73rem + 0.1vw, 0.813rem);
 
   /*========== Font weight ==========*/
   --font-medium: 500;
@@ -56,18 +58,7 @@
   --z-fixed: 100;
 }
 
-/* Font size for large devices */
-@media screen and (min-width: 968px) {
-  :root {
-    --big-font-size: 3rem;
-    --h1-font-size: 2.25rem;
-    --h2-font-size: 1.5rem;
-    --h3-font-size: 1.25rem;
-    --normal-font-size: 1rem;
-    --small-font-size: .875rem;
-    --smaller-font-size: .813rem;
-  }
-}
+/* Font sizes now use clamp() — no media query needed */
 
 /*========== Variables Dark theme ==========*/
 body.dark-theme {
@@ -77,6 +68,7 @@ body.dark-theme {
   --input-color: hsl(var(--hue-color), 29%, 16%);
   --body-color: hsl(var(--hue-color), 28%, 12%);
   --container-color: hsl(var(--hue-color), 29%, 16%);
+  --contrast-text: hsl(var(--hue-color), 8%, 95%);
   --scroll-bar-color: hsl(var(--hue-color), 12%, 48%);
   --scroll-thumb-color: hsl(var(--hue-color), 12%, 36%);
 }
@@ -85,6 +77,16 @@ body.dark-theme {
 .nav__btns {
   display: flex;
   align-items: center;
+}
+
+.change-theme,
+.nav__toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
 .change-theme {
@@ -107,6 +109,24 @@ body.dark-theme {
 
 html {
   scroll-behavior: smooth;
+}
+
+/*========== Focus Styles (Keyboard Navigation) ==========*/
+:focus-visible {
+  outline: 2px solid var(--first-color);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+
+.button:focus-visible {
+  box-shadow: 0 0 0 3px var(--first-color-lighter);
+  outline: none;
+}
+
+.nav__link:focus-visible {
+  color: var(--first-color);
+  outline-offset: 4px;
 }
 
 body {
@@ -218,7 +238,7 @@ img {
     padding: 2rem 1.5rem 4rem;
     box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.15);
     border-radius: 1.5rem 1.5rem 0 0;
-    transition: 0.3s;
+    transition: bottom 0.3s ease;
   }
 }
 
@@ -328,7 +348,7 @@ img {
 
 .home__scroll-button {
   color: var(--first-color);
-  transition: .3s;
+  transition: transform 0.3s ease;
 }
 
 .home__scroll-button:hover {
@@ -354,7 +374,7 @@ img {
 .button {
   display: inline-block;
   background-color: var(--first-color);
-  color: #fff;
+  color: var(--contrast-text);
   padding: 1rem;
   border-radius: .5rem;
   font-weight: var(--font-medium);
@@ -367,7 +387,7 @@ img {
 .button__icon {
   font-size: 1.25rem;
   margin-left: var(--mb-0-5);
-  transition: .3s;
+  transition: transform 0.3s ease;
 }
 
 .button--white {
@@ -473,7 +493,7 @@ img {
 
 .skills__arrow {
   margin-left: auto;
-  transition: .4s;
+  transition: transform 0.4s ease;
 }
 
 .skills__list {
@@ -590,7 +610,7 @@ img {
   padding: 1.75rem 0.75rem;
   border-radius: .25rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  transition: 0.3s;
+  transition: box-shadow 0.3s ease;
 }
 
 .publications__content:hover {
@@ -721,8 +741,8 @@ img {
   color: var(--title-color);
 }
 
-.contact__content>input,
-textarea {
+.contact__content > input,
+.contact__content > textarea {
   width: 100%;
   background-color: var(--input-color);
   color: var(--text-color);
@@ -786,7 +806,7 @@ textarea {
 .footer__subtitle,
 .footer__link,
 .footer__social {
-  color: #fff;
+  color: var(--contrast-text);
 }
 
 /*========== SCROLL UP ==========*/
@@ -799,7 +819,7 @@ textarea {
   padding: 0 .3rem;
   border-radius: .4rem;
   z-index: var(--z-tooltip);
-  transition: .4s;
+  transition: bottom 0.4s ease, background-color 0.3s ease;
 }
 
 .scrollup:hover {
@@ -808,7 +828,7 @@ textarea {
 
 .scrollup__icon {
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--contrast-text);
 }
 
 /* Show scroll */
@@ -1128,19 +1148,19 @@ textarea {
   text-align: center;
   pointer-events: auto;
   animation: fadeOut 0.5s ease-in-out forwards 4.5s;
-  transition: .3s;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .message-success {
   background-color: hsla(var(--hue-color), 60%, 50%, 0.4);
-  color: #fff;
+  color: var(--contrast-text);
   backdrop-filter: blur(10px);
   border: 1px solid hsla(var(--hue-color), 60%, 50%, 0.2);
 }
 
 .message-error {
   background-color: rgba(248, 58, 58, 0.9);
-  color: #fff;
+  color: var(--contrast-text);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(248, 58, 58, 0.2);
 }

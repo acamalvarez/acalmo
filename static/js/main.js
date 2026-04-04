@@ -1,74 +1,78 @@
 /*==================== MENU SHOW Y HIDDEN ====================*/
-const navMenu = document.getElementById('nav-menu'),
-    navToggle = document.getElementById('nav-toggle'),
-    navClose = document.getElementById('nav-close')
+const navMenu = document.getElementById('nav-menu');
+const navToggle = document.getElementById('nav-toggle');
+const navClose = document.getElementById('nav-close');
 
-/*===== MENU SHOW =====*/
-/* Validate if constant exists */
+/* Menu show */
 if (navToggle) {
     navToggle.addEventListener('click', () => {
-        navMenu.classList.add('show-menu')
-    })
+        navMenu.classList.add('show-menu');
+        navToggle.setAttribute('aria-expanded', 'true');
+    });
 }
 
-/*===== MENU HIDDEN =====*/
-/* Validate if constant exists */
+/* Menu hidden */
 if (navClose) {
     navClose.addEventListener('click', () => {
-        navMenu.classList.remove('show-menu')
-    })
+        navMenu.classList.remove('show-menu');
+        navToggle.setAttribute('aria-expanded', 'false');
+    });
 }
 
 /*==================== REMOVE MENU MOBILE ====================*/
-const navLink = document.querySelectorAll('.nav__link')
+const navLink = document.querySelectorAll('.nav__link');
 
 function linkAction() {
-    const navMenu = document.getElementById('nav-menu')
-    // When we click on each nav__link, we remove the show-menu class
-    navMenu.classList.remove('show-menu')
+    navMenu.classList.remove('show-menu');
+    navToggle.setAttribute('aria-expanded', 'false');
 }
-navLink.forEach(n => n.addEventListener('click', linkAction))
+navLink.forEach(n => n.addEventListener('click', linkAction));
 
 /*==================== ACCORDION SKILLS ====================*/
-const skillsContent = document.getElementsByClassName('skills__content'),
-    skillsHeader = document.querySelectorAll('.skills__header')
+const skillsContent = document.querySelectorAll('.skills__content');
+const skillsHeader = document.querySelectorAll('.skills__header');
 
 function toggleSkills() {
-    let itemClass = this.parentNode.className
+    const parent = this.parentNode;
+    const wasOpen = parent.classList.contains('skills__open');
 
-    for (let i = 0; i < skillsContent.length; i++) {
-        skillsContent[i].className = 'skills__content skills__close'
+    for (const content of skillsContent) {
+        content.classList.remove('skills__open');
+        content.classList.add('skills__close');
     }
-    if (itemClass === 'skills__content skills__close') {
-        this.parentNode.className = 'skills__content skills__open'
+
+    if (!wasOpen) {
+        parent.classList.remove('skills__close');
+        parent.classList.add('skills__open');
     }
 }
 
 skillsHeader.forEach((el) => {
-    el.addEventListener('click', toggleSkills)
-})
+    el.addEventListener('click', toggleSkills);
+});
 
 /*==================== QUALIFICATION TABS ====================*/
-const tabs = document.querySelectorAll('[data-target]'),
-    tabContents = document.querySelectorAll('[data-content]')
+const tabs = document.querySelectorAll('[data-target]');
+const tabContents = document.querySelectorAll('[data-content]');
 
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-        const target = document.querySelector(tab.dataset.target)
+        const target = document.querySelector(tab.dataset.target);
 
         tabContents.forEach(tabContent => {
-            tabContent.classList.remove('qualification__active')
-        })
-        target.classList.add('qualification__active')
-        tabs.forEach(tab => {
-            tab.classList.remove('qualification__active')
-        })
-        tab.classList.add('qualification__active')
-    })
-})
+            tabContent.classList.remove('qualification__active');
+        });
+        target.classList.add('qualification__active');
+
+        tabs.forEach(t => {
+            t.classList.remove('qualification__active');
+        });
+        tab.classList.add('qualification__active');
+    });
+});
 
 /*==================== PORTFOLIO SWIPER  ====================*/
-let swiperPortfolio = new Swiper('.portfolio__container', {
+const swiperPortfolio = new Swiper('.portfolio__container', {
     cssMode: true,
     loop: true,
 
@@ -83,86 +87,110 @@ let swiperPortfolio = new Swiper('.portfolio__container', {
 });
 
 /*==================== SCROLL SECTIONS ACTIVE LINK ====================*/
-const sections = document.querySelectorAll('section[id]')
+const sections = document.querySelectorAll('section[id]');
 
 function scrollActive() {
-    const scrollY = window.pageYOffset
+    const scrollY = window.scrollY;
 
     sections.forEach(current => {
-        const sectionHeight = current.offsetHeight
+        const sectionHeight = current.offsetHeight;
         const sectionTop = current.offsetTop - 50;
-        let sectionId = current.getAttribute('id')
+        const sectionId = current.getAttribute('id');
+        const link = document.querySelector(`.nav__menu a[href*="${sectionId}"]`);
+
+        if (!link) return;
 
         if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.add('active-link')
+            link.classList.add('active-link');
         } else {
-            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.remove('active-link')
+            link.classList.remove('active-link');
         }
-    })
+    });
 }
-window.addEventListener('scroll', scrollActive)
 
 /*==================== CHANGE BACKGROUND HEADER ====================*/
 function scrollHeader() {
-    const nav = document.getElementById('header')
-    // When the scroll is greater than 200 viewport height, add the scroll-header class to the header tag
-    if (this.scrollY >= 80) {
-        nav.classList.add('scroll-header')
+    const nav = document.getElementById('header');
+    if (window.scrollY >= 80) {
+        nav.classList.add('scroll-header');
     } else {
-        nav.classList.remove('scroll-header')
+        nav.classList.remove('scroll-header');
     }
 }
-window.addEventListener('scroll', scrollHeader)
 
 /*==================== SHOW SCROLL UP ====================*/
 function scrollUp() {
-    const scrollUp = document.getElementById('scroll-up');
-    // When the scroll is higher than 560 viewport height, add the show-scroll class to the a tag with the scroll-top class
-    if (this.scrollY >= 560) {
-        scrollUp.classList.add('show-scroll')
+    const scrollUpEl = document.getElementById('scroll-up');
+    if (window.scrollY >= 560) {
+        scrollUpEl.classList.add('show-scroll');
     } else {
-        scrollUp.classList.remove('show-scroll')
+        scrollUpEl.classList.remove('show-scroll');
     }
 }
-window.addEventListener('scroll', scrollUp)
 
-/*==================== DARK LIGHT THEME ====================*/
-const themeButton = document.getElementById('theme-button')
-const darkTheme = 'dark-theme'
-const iconTheme = 'uil-sun'
+/*==================== THROTTLED SCROLL HANDLER ====================*/
+let ticking = false;
 
-// Previously selected topic (if user selected)
-const selectedTheme = localStorage.getItem('selected-theme')
-const selectedIcon = localStorage.getItem('selected-icon')
-
-// We obtain the current theme that the interface has by validating the dark-theme class
-const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light'
-const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'uil-moon' : 'uil-sun'
-
-// We validate if the user previously chose a topic
-if (selectedTheme) {
-    // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated the dark
-    document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
-    themeButton.classList[selectedIcon === 'uil-moon' ? 'add' : 'remove'](iconTheme)
+function onScroll() {
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            scrollActive();
+            scrollHeader();
+            scrollUp();
+            ticking = false;
+        });
+        ticking = true;
+    }
 }
 
-// Activate / deactivate the theme manually with the button
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/*==================== DARK LIGHT THEME ====================*/
+const themeButton = document.getElementById('theme-button');
+const darkTheme = 'dark-theme';
+const iconTheme = 'uil-sun';
+
+// Check for previously saved theme or system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const selectedTheme = localStorage.getItem('selected-theme');
+const selectedIcon = localStorage.getItem('selected-icon');
+
+const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light';
+const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'uil-moon' : 'uil-sun';
+
+if (selectedTheme) {
+    // User explicitly chose a theme — respect it
+    document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
+    themeButton.classList[selectedIcon === 'uil-moon' ? 'add' : 'remove'](iconTheme);
+} else if (prefersDark) {
+    // No explicit choice — follow OS preference
+    document.body.classList.add(darkTheme);
+    themeButton.classList.add(iconTheme);
+}
+
+// Listen for OS theme changes in real time
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('selected-theme')) {
+        document.body.classList[e.matches ? 'add' : 'remove'](darkTheme);
+        themeButton.classList[e.matches ? 'add' : 'remove'](iconTheme);
+    }
+});
+
+// Toggle theme manually
 themeButton.addEventListener('click', () => {
-    // Add or remove the dark / icon theme
-    document.body.classList.toggle(darkTheme)
-    themeButton.classList.toggle(iconTheme)
-    // We save the theme and the current icon that the user chose
-    localStorage.setItem('selected-theme', getCurrentTheme())
-    localStorage.setItem('selected-icon', getCurrentIcon())
-})
+    document.body.classList.toggle(darkTheme);
+    themeButton.classList.toggle(iconTheme);
+    localStorage.setItem('selected-theme', getCurrentTheme());
+    localStorage.setItem('selected-icon', getCurrentIcon());
+});
 
 /*==================== REMOVE MESSAGE ====================*/
-const messages = document.querySelectorAll('.message')
+const messages = document.querySelectorAll('.message');
 
 if (messages.length > 0) {
     setTimeout(() => {
         messages.forEach(message => {
-            message.remove()
-        })
-    }, 3000)
+            message.remove();
+        });
+    }, 3000);
 }
