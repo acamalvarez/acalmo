@@ -15,7 +15,7 @@ class Skill(models.Model):
     def time(self):
         end_date = self.end_date or timezone.now()
         number_of_years = end_date.year - self.start_date.year
-        number_of_years = 1 if number_of_years < 1 else number_of_years
+        number_of_years = max(1, number_of_years)
         year_text = "year" if number_of_years <= 1 else "years"
         return f"More than {number_of_years} {year_text}"
 
