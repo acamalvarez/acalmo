@@ -32,11 +32,16 @@ plugins = ["mypy_django_plugin.main"]
 django_settings_module = "acalmo.settings"
 
 [[tool.mypy.overrides]]
-module = ["environ.*"]
+module = [
+    "environ.*",
+    "django_ratelimit.*",
+    "django_recaptcha.*",
+]
 ignore_missing_imports = true
 
 [dependency-groups]
 dev = [
+    "django-stubs>=6.0.3",
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "ruff>=0.15.5",

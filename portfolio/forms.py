@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from django_recaptcha.fields import ReCaptchaField
-from django_recaptcha.widgets import ReCaptchaV3
+from django_recaptcha.fields import ReCaptchaField  # type: ignore[import-untyped]
+from django_recaptcha.widgets import ReCaptchaV3  # type: ignore[import-untyped]
 
 from .models.contact_models import Contact
 
