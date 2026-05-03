@@ -44,7 +44,7 @@ class HomeView(FormView):
         send_mail(
             subject=form.cleaned_data["subject"],
             message=email_message,
-            from_email="",
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=[settings.EMAIL_HOST_USER],
         )
 
