@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
-from django_ratelimit.decorators import ratelimit  # type: ignore[import-untyped]
+from django_ratelimit.decorators import ratelimit
 
 from .forms import ContactForm
 from .models.project_models import Project
