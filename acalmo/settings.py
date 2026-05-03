@@ -194,6 +194,9 @@ RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
 RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
 RECAPTCHA_REQUIRED_SCORE = env.float("RECAPTCHA_REQUIRED_SCORE", default=0.50)
 
+# Chatbot
+CHATBOT_API_URL = env("CHATBOT_API_URL")
+
 # Logging — ensures tracebacks appear in Cloud Run stderr
 LOGGING = {
     "version": 1,
