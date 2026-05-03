@@ -149,6 +149,7 @@ class HomeViewGETTest(SeedDataMixin, TestCase):
 @override_settings(
     CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}},
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    RECAPTCHA_TESTING=True,
 )
 class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
     """Tests for a valid POST (contact-form submission) on the home page."""
@@ -161,24 +162,31 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
             "email": "john@example.com",
             "subject": "Test Subject",
             "message": "Hello, this is a test.",
+            "g-recaptcha-response": "PASSED",
         }
 
+    @patch("django_recaptcha.fields.ReCaptchaField.clean")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_redirects(self, mock_send_mail):
+    def test_valid_post_redirects(self, mock_send_mail, mock_clean):
+        mock_clean.return_value = "PASSED"
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/")
 
+    @patch("django_recaptcha.fields.ReCaptchaField.clean")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_saves_contact(self, mock_send_mail):
+    def test_valid_post_saves_contact(self, mock_send_mail, mock_clean):
+        mock_clean.return_value = "PASSED"
         self.client.post(self.url, data=self.valid_data)
         self.assertEqual(Contact.objects.count(), 1)
         contact = Contact.objects.first()
         self.assertEqual(contact.name, "John Doe")
         self.assertEqual(contact.email, "john@example.com")
 
+    @patch("django_recaptcha.fields.ReCaptchaField.clean")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_sends_email(self, mock_send_mail):
+    def test_valid_post_sends_email(self, mock_send_mail, mock_clean):
+        mock_clean.return_value = "PASSED"
         self.client.post(self.url, data=self.valid_data)
         mock_send_mail.assert_called_once()
         call_kwargs = mock_send_mail.call_args
@@ -187,16 +195,20 @@ class HomeViewValidPOSTTest(SeedDataMixin, TestCase):
         self.assertIn("John Doe", call_kwargs[1]["message"])
         self.assertIn("Hello, this is a test.", call_kwargs[1]["message"])
 
+    @patch("django_recaptcha.fields.ReCaptchaField.clean")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_sets_success_message(self, mock_send_mail):
+    def test_valid_post_sets_success_message(self, mock_send_mail, mock_clean):
+        mock_clean.return_value = "PASSED"
         response = self.client.post(self.url, data=self.valid_data, follow=True)
         msgs = list(response.context["messages"])
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), "Message sent successfully!")
 
+    @patch("django_recaptcha.fields.ReCaptchaField.clean")
     @patch("portfolio.views.send_mail")
-    def test_valid_post_email_failure_propagates(self, mock_send_mail):
+    def test_valid_post_email_failure_propagates(self, mock_send_mail, mock_clean):
         """Test that if send_mail raises an exception, the exception propagates."""
+        mock_clean.return_value = "PASSED"
         from smtplib import SMTPException
 
         mock_send_mail.side_effect = SMTPException("SMTP server disconnected")
