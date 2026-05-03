@@ -1,0 +1,32 @@
+<!-- Floating Chat Button -->
+<button id="chatbot-toggle" class="chatbot-toggle" aria-label="Open Digital Twin Chat">
+  <i class="uil uil-comment-dots"></i>
+</button>
+
+<!-- Chat Window -->
+<div id="chatbot-window" class="chatbot-window hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-title">
+      <i class="uil uil-robot"></i>
+      <span>Acalmo's Twin</span>
+    </div>
+    <div class="chatbot-controls">
+      <button id="chatbot-expand" aria-label="Expand Chat"><i class="uil uil-expand-arrows"></i></button>
+      <button id="chatbot-close" aria-label="Close Chat"><i class="uil uil-multiply"></i></button>
+    </div>
+  </div>
+  
+  <div class="chatbot-messages" id="chatbot-messages">
+    <!-- Messages will be appended here -->
+    <div class="chatbot-msg bot-message">
+      Hi! I'm the digital twin of this portfolio. Ask me anything about Andrés's skills, projects, or experience!
+    </div>
+  </div>
+
+  <form id="chatbot-form" class="chatbot-input-area">
+    <input type="text" id="chatbot-input" placeholder="Type a question..." required autocomplete="off">
+    <button type="submit" id="chatbot-submit" aria-label="Send">
+      <i class="uil uil-message"></i>
+    </button>
+  </form>
+</div>

@@ -133,6 +133,10 @@ class HomeViewGETTest(SeedDataMixin, TestCase):
         response = self.client.get(self.url)
         self.assertIn("form", response.context)
 
+    def test_context_contains_chatbot_api_url(self):
+        response = self.client.get(self.url)
+        self.assertIn("chatbot_api_url", response.context)
+
     def test_empty_database_returns_200(self):
         """The view should still render when the database is empty."""
         Project.objects.all().delete()

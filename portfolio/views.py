@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
-from django_ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit  # type: ignore[import-untyped]
 
 from .forms import ContactForm
 from .models.project_models import Project
@@ -27,6 +27,7 @@ class HomeView(FormView):
         context["skills"] = Skill.objects.prefetch_related("subskill_set").all()
         context["educations"] = Qualification.objects.filter(qualification_type=Qualification.EDUCATION)
         context["works"] = Qualification.objects.filter(qualification_type=Qualification.WORK)
+        context["chatbot_api_url"] = settings.CHATBOT_API_URL
         return context
 
     @method_decorator(ratelimit(key="ip", rate="5/m", method="POST", block=True))

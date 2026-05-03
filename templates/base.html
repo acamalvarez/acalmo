@@ -37,6 +37,9 @@
 
   <!--==================== CSS ====================-->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+  <!--==================== CHATBOT CSS ====================-->
+  <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 
   <!--==================== FAVICON ====================-->
   <link rel="icon" href="{% static 'favicon.ico' %}">
@@ -103,6 +106,13 @@
 
   <!--==================== MAIN JS ====================-->
   <script defer src="{% static 'js/main.js' %}"></script>
+  
+  <!--==================== CHATBOT ====================-->
+  {% include "chatbot_widget.html" %}
+  <script>
+    window.CHATBOT_API_URL = "{{ chatbot_api_url }}";
+  </script>
+  <script defer src="{% static 'js/chatbot.js' %}"></script>
 </body>
 
 </html>
